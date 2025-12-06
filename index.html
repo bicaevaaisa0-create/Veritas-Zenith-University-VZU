@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Veritas Zenith University — Royal Core</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Panolens -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/panolens@0.12.0/build/panolens.min.css">
+
+<style>
+:root{
+  --sea-blue:#0a3d62;
+  --gold:#f0c674;
+  --sand:#f5e6c4;
+  --text-main:#f5e6c4;
+  --text-dark:#1b1b1b;
+  --card-bg:rgba(10,61,98,0.4);
+  --card-border:rgba(240,198,116,0.5);
+  --shadow-strong:rgba(0,0,0,0.3);
+  --shadow-light:rgba(240,198,116,0.2);
+  --accent:#f0c674;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%; font-family:'Poppins',sans-serif; background: linear-gradient(180deg,var(--sea-blue),#061d2b); color:var(--text-main); scroll-behavior:smooth;}
+a{text-decoration:none;color:inherit;}
+.container{width:min(1200px,94%);margin:0 auto;}
+
+nav{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:20px 50px;
+  background: rgba(10,61,98,0.7);backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--card-border);
+  box-shadow: 0 6px 20px var(--shadow-light);
+  position:sticky; top:0; z-index:50;
+}
+.logo-container{display:flex;align-items:center;gap:15px;}
+.logo-img{height:50px;width:auto;border-radius:12px;box-shadow:0 6px 20px var(--shadow-light);}
+.logo-text{font-family:'Cinzel',serif;font-size:26px;color:var(--gold);font-weight:700;text-shadow:0 2px 6px var(--shadow-strong);}
+.menu a{text-transform:uppercase;font-weight:600;font-size:14px;padding:6px 12px;border-radius:12px;transition: all 0.3s ease;}
+.menu a:hover{background: linear-gradient(90deg,var(--gold),var(--sand));color:var(--text-dark);box-shadow:0 6px 20px var(--shadow-light);}
+
+.hero{position:relative;padding:60px 0 100px;text-align:center;background:linear-gradient(180deg,#0a3d62,#061d2b);}
+.hero-card{background:var(--card-bg);border:2px solid var(--gold);border-radius:20px;box-shadow:0 18px 60px var(--shadow-strong);padding:48px;display:inline-block;}
+.hero-card h1{font-family:'Cinzel',serif;font-size:48px;color:var(--gold);text-shadow:0 2px 8px var(--shadow-strong);margin-bottom:16px;}
+.hero-card p{font-size:18px;color:var(--sand);margin-bottom:24px;}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:linear-gradient(90deg,var(--gold),var(--sand));color:var(--text-dark);font-weight:700;padding:12px 28px;border-radius:999px;box-shadow:0 8px 30px var(--shadow-light);border:none;transition:transform 0.2s ease;}
+.btn-primary:hover{transform:scale(1.05);box-shadow:0 12px 40px var(--shadow-light);}
+.btn-ghost{background: rgba(255,255,255,0.1);color:var(--sand);border:1px solid var(--gold);padding:12px 24px;border-radius:999px;transition:all 0.2s ease;}
+.btn-ghost:hover{background: linear-gradient(90deg,var(--gold),var(--sand));color:var(--text-dark);box-shadow:0 6px 20px var(--shadow-light);}
+
+.section-wrap{
+  background:var(--card-bg);border-radius:20px;padding:40px;margin:60px 0;border:2px solid var(--gold);box-shadow:0 12px 50px var(--shadow-strong);position:relative;
+  background-image: radial-gradient(circle at top left, rgba(240,198,116,0.1), transparent 70%);
+}
+.section-wrap h2{font-family:'Cinzel',serif;font-size:32px;color: var(--gold);text-shadow:0 2px 6px var(--shadow-strong);margin-bottom:16px;}
+.section-wrap h3,p,li{color:var(--sand);margin:12px 0;font-size:16px;}
+.columns{display:flex;gap:30px;flex-wrap:wrap;}
+.col{flex:1;min-width:260px;}
+
+.programs{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.prog-card{background: rgba(10,61,98,0.5);border-radius:16px;padding:18px;box-shadow:0 8px 30px var(--shadow-light);border:1px solid var(--gold);transition:all 0.3s ease;}
+.prog-card:hover{transform:translateY(-6px);box-shadow:0 12px 40px var(--shadow-light);}
+
+#ai-toggle{position:fixed;right:28px;bottom:28px;z-index:90;background:linear-gradient(90deg,var(--gold),var(--sand));color:#1b1b1b;border-radius:999px;padding:14px 18px;font-weight:700;box-shadow:0 12px 40px var(--shadow-light);cursor:pointer;border:none;}
+#ai-panel{position:fixed;right:28px;bottom:86px;width:360px;max-width:92%;background: rgba(10,61,98,0.6);border-radius:14px;box-shadow:0 20px 60px var(--shadow-strong);padding:14px;display:none;z-index:95;color:var(--sand);}
+#ai-panel .ai-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:8px;border-bottom:1px solid rgba(240,198,116,0.3);}
+#ai-panel input{width:100%;padding:10px 12px;border-radius:10px;border:1px solid rgba(240,198,116,0.3);outline:none;margin-top:10px;background:rgba(255,255,255,0.1);color:var(--sand);}
+#ai-panel .ai-body{padding:12px 0;max-height:220px;overflow-y:auto;}
+#ai-panel button{cursor:pointer;}
+footer{background: rgba(95, 229, 244, 0.8);border-top:2px solid var(--gold);color:var(--sand);text-align:center;padding:28px 0;box-shadow:0 -6px 20px var(--shadow-light);}
+
+/* Анимации воды */
+@keyframes float {
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+.hero-card::after{
+  content:"";
+  position:absolute;top:0;left:0;width:100%;height:100%;border-radius:20px;
+  background-color: rgb(23, 203, 191);
+  opacity:0.1;
+  animation: float 12s infinite ease-in-out;
+  pointer-events:none;
+}
+
+@media(max-width:900px){.hero-card h1{font-size:36px;}.columns{flex-direction:column;}}
+@media(max-width:560px){.hero-card{text-align:center;}.btn-cta{justify-content:center;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo-container">
+    <img src="5303408214353317837.jpg" alt="Логотип" class="logo-img">
+    <span class="logo-text">Veritas Zenith University</span>
+  </div>
+  <div class="menu">
+    <a href="#about">Об университете</a>
+    <a href="#programs">Программы</a>
+    <a href="#grants">Гранты</a>
+    <a href="#tour">3D-тур</a>
+    <a href="#international">Международное</a>
+    <a href="#ai-section">ИИ-помощник</a>
+    <a href="#contacts">Контакты</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-card">
+    <h1>Veritas Zenith University</h1>
+    <p>Добро пожаловать в магический университет будущего — знания, инновации и приключения!</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('programs').scrollIntoView({behavior:'smooth'})">Найти программу</button>
+      <button class="btn-ghost" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Узнать больше</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- Об университете -->
+<section id="about" class="section-wrap">
+<h2>Об университете</h2>
+<div class="columns">
+<div class="col">
+<h3>Миссия и ценности</h3>
+<p>Формируем лидеров будущего через знания и инновации.</p>
+<h3>История</h3>
+<p>Основан как центр передовых технологий, стал международным кампусом.</p>
+</div>
+<div class="col">
+<h3>Лидерство</h3>
+<p>Команда мирового уровня управляет стратегией развития.</p>
+<h3>Достижения</h3>
+<p>Входит в число ведущих образовательных учреждений региона.</p>
+</div>
+</div>
+</section>
+
+<!-- Программы -->
+<section id="programs" class="section-wrap">
+<h2>Учебные программы</h2>
+<h3>Факультеты и направления</h3>
+<p>Инженерия, IT, бизнес, гуманитарные науки, дизайн, медицина.</p>
+<div class="programs">
+<div class="prog-card"><h3>Компьютерные науки</h3><p>AI, Data Science, технологии будущего.</p></div>
+<div class="prog-card"><h3>Бизнес и менеджмент</h3><p>Финансы, управление, предпринимательство.</p></div>
+<div class="prog-card"><h3>Дизайн и медиа</h3><p>UX/UI, графический дизайн, анимация.</p></div>
+</div>
+</section>
+
+<!-- Гранты и скидки -->
+<section id="grants" class="section-wrap">
+<h2>Гранты и скидки</h2>
+<ul>
+<li>Полные и частичные стипендии для талантливых студентов.</li>
+<li>Скидки для семей студентов и международных участников.</li>
+<li>Гранты на исследовательские проекты.</li>
+</ul>
+</section>
+
+<!-- 3D тур -->
+<section id="tour" class="section-wrap">
+<h2>3D-тур по кампусу</h2>
+<div id="campus360" style="width:100%;height:400px;border-radius:20px;overflow:hidden;box-shadow:0 12px 40px var(--shadow-strong);"></div>
+</section>
+
+<!-- Международное сотрудничество -->
+<section id="international" class="section-wrap">
+<h2>Международное сотрудничество</h2>
+<p>Программы обмена, партнерские университеты, возможности для иностранных студентов.</p>
+</section>
+
+<!-- ИИ помощник -->
+<section id="ai-section" class="section-wrap">
+<h2>ИИ-помощник</h2>
+<ul>
+<li>Ответы на вопросы о поступлении и программах</li>
+<li>Сравнение учебных программ</li>
+<li>Персональные рекомендации</li>
+<li>Виртуальный диалог с деканами</li>
+</ul>
+</section>
+
+<!-- Контакты -->
+<section id="contacts" class="section-wrap">
+<h2>Контакты и поддержка</h2>
+<p><strong>Телефон:</strong> +7 (701) 123-45-67</p>
+<p><strong>Email:</strong> info@veritaszenith.edu.kz</p>
+<p><strong>Адрес:</strong> ул. Академическая, 12, Алматы, Казахстан</p>
+<p><strong>Соц. сети:</strong> <a href="#">Facebook</a>, <a href="#">Instagram</a>, <a href="#">LinkedIn</a></p>
+<p>Онлайн-форма для поддержки доступна на сайте.</p>
+</section>
+
+</main>
+
+<button id="ai-toggle">ИИ-помощник</button>
+<div id="ai-panel">
+<div class="ai-header">
+<strong>ИИ-помощник</strong>
+<button onclick="closeAI()">✕</button>
+</div>
+<div class="ai-body">
+<p>Введите вопрос и получите ответ о программах и поступлении.</p>
+<input id="ai-input" placeholder="Например: Какие документы нужны?" />
+<div style="margin-top:10px; display:flex; gap:8px; justify-content:flex-end;">
+<button onclick="sendAI()" style="background:var(--gold);border:none;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer">Отправить</button>
+<button onclick="closeAI()" style="background:transparent;border:1px solid rgba(240,198,116,0.3);padding:8px 12px;border-radius:8px;cursor:pointer">Отмена</button>
+</div>
+<div id="ai-response" style="margin-top:12px;"></div>
+</div>
+</div>
+
+<footer class="container">
+<p>© Veritas Zenith University — Все права защищены</p>
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('nav .menu a').forEach(a=>{
+  a.addEventListener('click', e=>{
+    e.preventDefault();
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+// ИИ-панель
+const aiToggle = document.getElementById('ai-toggle');
+const aiPanel = document.getElementById('ai-panel');
+const aiInput = document.getElementById('ai-input');
+const aiResponse = document.getElementById('ai-response');
+
+aiToggle.onclick = ()=>aiPanel.style.display='block';
+function closeAI(){aiPanel.style.display='none';aiInput.value='';aiResponse.innerHTML='';}
+
+function sendAI(){
+  const q=aiInput.value.trim();
+  if(!q)return;
+  let answer = "Извините, я пока не знаю точного ответа, но могу дать общую информацию о поступлении и программах.";
+  if(q.toLowerCase().includes("документы")) answer="Для поступления нужны паспорт, аттестат/диплом, заявление и рекомендации.";
+  if(q.toLowerCase().includes("скидка") || q.toLowerCase().includes("грант")) answer="Мы предоставляем стипендии и гранты для талантливых студентов.";
+  aiResponse.innerHTML = `<strong>Вопрос:</strong> ${q}<br><strong>Ответ:</strong> ${answer}`;
+}
+</script>
+</body>
+</html>
